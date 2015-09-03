@@ -58,9 +58,8 @@ int main(int argc, char **argv) {
         for (size_t n = beginNumber;; n++) {
             numberToken->setNumber(n);
             string file = "";
-            for (auto token : (*tokens)) {
+            for (auto token : (*tokens)) 
                 file += token->toString();
-            }
             if (!fileExist(file)) {
                 cout << file;
                 break;
