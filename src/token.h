@@ -12,6 +12,27 @@
 
 using namespace std;
 
+#define DEFAULT_NUMBER_WIDTH "3"
+#define DEFAULT_YEAR_WIDTH   "4"
+#define DEFAULT_MONTH_WIDTH  "2"
+#define DEFAULT_DAY_WIDTH    "2"
+#define DEFAULT_HOUR_WIDTH   "2"
+#define DEFAULT_MINUTE_WIDTH "2"
+#define DEFAULT_SECOND_WIDTH "2"
+
+inline const map<int, string> *getDefaultWidths() {
+    static map<int, string> DEFAULT_WIDTHS = {
+        {'n', DEFAULT_NUMBER_WIDTH}, 
+        {'y', DEFAULT_YEAR_WIDTH}, 
+        {'m', DEFAULT_MONTH_WIDTH}, 
+        {'d', DEFAULT_DAY_WIDTH}, 
+        {'h', DEFAULT_HOUR_WIDTH}, 
+        {'M', DEFAULT_MINUTE_WIDTH}, 
+        {'s', DEFAULT_SECOND_WIDTH}, 
+    };
+    return &DEFAULT_WIDTHS;
+};
+
 class Token {
 public:
     virtual string toString() = 0;
@@ -87,7 +108,6 @@ inline shared_ptr<VariableToken> makeSecondToken(const Date &now) {
 }
 
 using MakeTokenProc = function<shared_ptr<VariableToken>(Date)>;
-
 inline const map<int, MakeTokenProc> *getMakeTokenProcs() {
     static const map<int, MakeTokenProc> MAKE_TOKEN_PROCS = {
         {'n', &makeNumberToken}, 
@@ -138,8 +158,10 @@ inline shared_ptr<vector<shared_ptr<Token>>> tokenize(
                 throw describe(__FILE__, "(", __LINE__, "): " , "'", type, "'‚Æ‚¢‚¤Ží—Þ‚Ì•Ï”‚Í‚ ‚è‚Ü‚¹‚ñB");
             pos++;
             auto t = getMakeTokenProcs()->at(type)(now);
+            string ws = getDefaultWidths()->at(type);
             if (pos < closePos) 
-                t->setWidth(s2ul(pattern.substr(pos, closePos - pos)));
+                ws = pattern.substr(pos, closePos - pos);
+            t->setWidth(s2ul(ws));
             tokens->push_back(t);
             pos = closePos + 1;
         }

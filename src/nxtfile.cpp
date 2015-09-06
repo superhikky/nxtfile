@@ -24,13 +24,13 @@ const string USAGE =
 "  同じ名前のファイルがすでに存在していれば次の番号に進みます。\n"
 "  既存のファイルと重複しない最初のファイル名を出力します。\n"
 "変数の種類の一覧\n"
-"  n 重複しない最初の番号。桁数を省略なら3。beginNumber...\n"
-"  y 現在の年。桁数を省略なら4。2015...\n"
-"  m 現在の月。桁数を省略なら2。1..12\n"
-"  d 現在の日。桁数を省略なら2。1..31\n"
-"  h 現在の時。桁数を省略なら2。0..23\n"
-"  M 現在の分。桁数を省略なら2。0..59\n"
-"  s 現在の秒。桁数を省略なら2。0..59\n"
+"  n 重複しない最初の番号。桁数を省略なら" DEFAULT_NUMBER_WIDTH "。beginNumber...\n"
+"  y 現在の年。桁数を省略なら" DEFAULT_YEAR_WIDTH "。2015...\n"
+"  m 現在の月。桁数を省略なら" DEFAULT_MONTH_WIDTH "。1..12\n"
+"  d 現在の日。桁数を省略なら" DEFAULT_DAY_WIDTH "。1..31\n"
+"  h 現在の時。桁数を省略なら" DEFAULT_MINUTE_WIDTH "。0..23\n"
+"  M 現在の分。桁数を省略なら" DEFAULT_MINUTE_WIDTH "。0..59\n"
+"  s 現在の秒。桁数を省略なら" DEFAULT_SECOND_WIDTH "。0..59\n"
 ;
 
 int main(int argc, char **argv) {
