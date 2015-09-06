@@ -54,9 +54,6 @@ protected:
     
     VariableToken(const size_t &width) : width(width) {}
 public:
-    void setWidth(const size_t &width) 
-        { this->width = width; }
-    
     virtual string toString() override {
         stringstream ss;
         ss << setw(this->width) << setfill('0') << this->number;
@@ -79,35 +76,35 @@ public:
         { this->number = number; }
 };
 
-inline shared_ptr<VariableToken> makeNumberToken(const Date &now) {
-    return newInstance<NumberToken>(3);
+inline shared_ptr<VariableToken> makeNumberToken(const size_t &width, const Date &now) {
+    return newInstance<NumberToken>(width);
 }
 
-inline shared_ptr<VariableToken> makeYearToken(const Date &now) {
-    return newInstance<DateToken>(4, now.getYear());
+inline shared_ptr<VariableToken> makeYearToken(const size_t &width, const Date &now) {
+    return newInstance<DateToken>(width, now.getYear());
 }
 
-inline shared_ptr<VariableToken> makeMonthToken(const Date &now) {
-    return newInstance<DateToken>(2, now.getMonth());
+inline shared_ptr<VariableToken> makeMonthToken(const size_t &width, const Date &now) {
+    return newInstance<DateToken>(width, now.getMonth());
 }
 
-inline shared_ptr<VariableToken> makeDayToken(const Date &now) {
-    return newInstance<DateToken>(2, now.getDay());
+inline shared_ptr<VariableToken> makeDayToken(const size_t &width, const Date &now) {
+    return newInstance<DateToken>(width, now.getDay());
 }
 
-inline shared_ptr<VariableToken> makeHourToken(const Date &now) {
-    return newInstance<DateToken>(2, now.getHour());
+inline shared_ptr<VariableToken> makeHourToken(const size_t &width, const Date &now) {
+    return newInstance<DateToken>(width, now.getHour());
 }
 
-inline shared_ptr<VariableToken> makeMinuteToken(const Date &now) {
-    return newInstance<DateToken>(2, now.getMinute());
+inline shared_ptr<VariableToken> makeMinuteToken(const size_t &width, const Date &now) {
+    return newInstance<DateToken>(width, now.getMinute());
 }
 
-inline shared_ptr<VariableToken> makeSecondToken(const Date &now) {
-    return newInstance<DateToken>(2, now.getSecond());
+inline shared_ptr<VariableToken> makeSecondToken(const size_t &width, const Date &now) {
+    return newInstance<DateToken>(width, now.getSecond());
 }
 
-using MakeTokenProc = function<shared_ptr<VariableToken>(Date)>;
+using MakeTokenProc = function<shared_ptr<VariableToken>(size_t, Date)>;
 inline const map<int, MakeTokenProc> *getMakeTokenProcs() {
     static const map<int, MakeTokenProc> MAKE_TOKEN_PROCS = {
         {'n', &makeNumberToken}, 
@@ -157,11 +154,10 @@ inline shared_ptr<vector<shared_ptr<Token>>> tokenize(
             if (getMakeTokenProcs()->count(type) == 0) 
                 throw describe(__FILE__, "(", __LINE__, "): " , "'", type, "'‚Æ‚¢‚¤Ží—Þ‚Ì•Ï”‚Í‚ ‚è‚Ü‚¹‚ñB");
             pos++;
-            auto t = getMakeTokenProcs()->at(type)(now);
-            string ws = getDefaultWidths()->at(type);
+            string w = getDefaultWidths()->at(type);
             if (pos < closePos) 
-                ws = pattern.substr(pos, closePos - pos);
-            t->setWidth(s2ul(ws));
+                w = pattern.substr(pos, closePos - pos);
+            auto t = getMakeTokenProcs()->at(type)(s2ul(w), now);
             tokens->push_back(t);
             pos = closePos + 1;
         }
